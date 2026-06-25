@@ -354,7 +354,11 @@ function bind(){
   document.querySelectorAll("[data-room]").forEach(b=>b.onclick=()=>{ S.roomId=b.dataset.room; render(); });
   document.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>set("step",+b.dataset.back));
   document.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{ const r=currentRoom(); S.guests=Math.min(r?.sleeps||4,Math.max(1,S.guests+ +b.dataset.g)); render(); });
-  document.querySelectorAll("[data-field]").forEach(i=>i.oninput=e=>{ S[e.target.dataset.field]=e.target.value; });
+  document.querySelectorAll("[data-field]").forEach(i=>i.oninput=e=>{
+    S[e.target.dataset.field]=e.target.value;
+    const nx=document.getElementById("next");
+    if(nx){ const ok=S.name.trim()&&validEmail(S.email)&&S.phone.trim()&&!S.busy; nx.disabled=!ok; nx.classList.toggle("opacity-40",!ok); }
+  });
   const reset=document.querySelector("[data-reset]"); if(reset) reset.onclick=()=>{ S={...S,step:1,roomId:null,name:"",email:"",phone:"",note:"",confirmation:null,error:""}; render(); };
   const ci=document.getElementById("ci"),co=document.getElementById("co"),dd=document.getElementById("dd");
   if(ci) ci.onchange=e=>{ S.checkIn=e.target.value; if(S.checkIn>=S.checkOut) S.checkOut=addDays(S.checkIn,1); render(); };
