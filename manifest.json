@@ -1,7 +1,7 @@
 {
-  "name": "Midtown Inn — Book Your Stay",
-  "short_name": "Midtown Inn",
-  "description": "Book direct with Midtown Inn, Baltimore. No fees.",
+  "name": "Mt. Vernon Inn — Book Your Stay",
+  "short_name": "Mt. Vernon Inn",
+  "description": "Book direct with Mt. Vernon Inn, Baltimore.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F6F2E9",
