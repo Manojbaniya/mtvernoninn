@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#1E4034" />
-<title>Book Your Stay — Midtown Inn Baltimore</title>
+<title>Book Your Stay — Mt. Vernon Inn Baltimore</title>
 <link rel="manifest" href="manifest.json" />
 
 <!-- ════════════════════════════════════════════════════════════════
@@ -23,16 +23,16 @@ const CONFIG = {
   // 3) Manager PIN — CHANGE THIS before showing anyone.
   MANAGER_PIN: "1234",
 
-  PROPERTY_NAME: "Midtown Inn",
+  PROPERTY_NAME: "Mt. Vernon Inn",
   PROPERTY_ADDR: "723 St Paul St, Baltimore, MD 21202",
   PHONE: "410-244-6630",
 
   // Starting rooms/prices (you can later edit all of these from the Manager screen).
   OVERNIGHT: [
-    { id: "queen",  name: "Standard Queen", beds: "1 queen bed",   sleeps: 2, weekday: 90,  weekend: 130, allocation: 2 },
-    { id: "double", name: "Double Room",     beds: "2 double beds", sleeps: 4, weekday: 110, weekend: 145, allocation: 1 },
-    { id: "king",   name: "King Room",        beds: "1 king bed",   sleeps: 2, weekday: 95,  weekend: 135, allocation: 1 },
-    { id: "deluxe", name: "Deluxe Room",      beds: "1 king bed",   sleeps: 3, weekday: 95,  weekend: 135, allocation: 1 },
+    { id: "double", name: "Standard Double", beds: "1 double bed",  sleeps: 2, weekday: 115, weekend: 130, allocation: 2 },
+    { id: "queen",  name: "Standard Queen",  beds: "1 queen bed",   sleeps: 2, weekday: 120, weekend: 135, allocation: 2 },
+    { id: "king",   name: "King Room",       beds: "1 king bed",    sleeps: 2, weekday: 125, weekend: 140, allocation: 1 },
+    { id: "dd",     name: "Double–Double",   beds: "2 double beds", sleeps: 4, weekday: 135, weekend: 150, allocation: 1 },
   ],
   DAYTIME: [
     { id: "slot1", name: "Morning Rest",   beds: "9:00 AM – 2:00 PM", tag: "Rest & relax",        sleeps: 2, price: 74.50, allocation: 2 },
@@ -136,7 +136,7 @@ async function submitBooking(){
   if(CONFIG.WEB3FORMS_KEY){
     try{ await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({ access_key:CONFIG.WEB3FORMS_KEY,
-        subject:`🛎️ New Direct Booking — ${booking.roomName} (${ref})`,
+        subject:`🛎️ New Booking Request — ${booking.roomName} (${ref})`,
         from_name:`${CONFIG.PROPERTY_NAME} Bookings`, email:booking.email,
         Reference:ref, Guest:booking.name, Phone:booking.phone, Email:booking.email, Room:booking.roomName,
         Stay: booking.type==="overnight"?`${booking.checkIn} → ${booking.checkOut} (${nights(booking.checkIn,booking.checkOut)} nt)`:`${booking.date} · ${booking.slot}`,
@@ -174,11 +174,11 @@ function stepHTML(room){
   if(S.step===1) return `
     <div class="pt-5">
       <h1 class="font-serif text-3xl leading-tight">Book direct.<br>Skip the fees.</h1>
-      <p class="text-sm text-stone mt-2">Reserve straight with the front desk — same rooms, no Expedia or Dayuse markup. ${CONFIG.PROPERTY_ADDR}, steps from the Aquarium & CFG Bank Arena.</p>
+      <p class="text-sm text-stone mt-2">Reserve straight with the front desk for our best direct rate. ${CONFIG.PROPERTY_ADDR} — in the heart of historic Mount Vernon, steps from the Aquarium & CFG Bank Arena.</p>
       <div class="mt-5 flex rounded-xl p-1" style="background:#EAE3D3">
         ${["overnight","daytime"].map(k=>`<button data-type="${k}" class="flex-1 py-2.5 rounded-lg text-sm font-medium ${S.type===k?'bg-green text-ivory':'text-stone'}">${k==="overnight"?"Overnight":"Daytime (5 hr)"}</button>`).join("")}
       </div>
-      ${S.type==="daytime"?`<p class="text-[12px] text-stone mt-3">💡 Day-use: same room, up to half the overnight price — perfect for rest, work, or before a flight.</p>`:""}
+      ${S.type==="daytime"?`<p class="text-[12px] text-stone mt-3">💡 Day-use: book a comfortable room for a 5-hour block — perfect for rest, work, or freshening up before a flight.</p>`:""}
       ${S.type==="overnight"?dateRowHTML():dayDateHTML()}
       <h2 class="font-serif text-xl mt-6 mb-3">Choose your room</h2>
       <div class="space-y-3">${rooms().map(roomCard).join("")}</div>
@@ -215,11 +215,11 @@ function stepHTML(room){
   return `
     <div class="pt-6 text-center">
       <div class="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-2xl bg-green text-ivory">✓</div>
-      <h2 class="font-serif text-2xl mt-4">You're booked!</h2>
-      <p class="text-sm text-stone mt-1">Confirmation <span class="text-brass font-semibold">${c.ref}</span></p>
+      <h2 class="font-serif text-2xl mt-4">Request sent!</h2>
+      <p class="text-sm text-stone mt-1">Reference <span class="text-brass font-semibold">${c.ref}</span> · we'll confirm within minutes</p>
     </div>
     <div class="mt-5 rounded-2xl p-5 text-center bg-green text-ivory">
-      <div class="text-[11px] uppercase tracking-widest text-brass">Show this at the front desk</div>
+      <div class="text-[11px] uppercase tracking-widest text-brass">Your reference number</div>
       <div class="font-serif text-3xl tracking-wider mt-1">${c.ref}</div>
     </div>
     <div class="mt-4 rounded-2xl p-5 space-y-3 bg-card border border-line">
@@ -229,7 +229,7 @@ function stepHTML(room){
       <div class="pt-3 border-t border-line flex justify-between"><span class="font-serif text-lg">Total</span><span class="font-serif text-lg text-green">$${money(c.total)}</span></div>
       <p class="text-xs text-stone">💵 Pay this amount at the front desk on arrival.</p>
     </div>
-    <div class="mt-4 rounded-xl p-4 text-sm text-stone" style="background:#EFEADC">📧 A confirmation went to <b class="text-ink">${esc(c.email)}</b>, and the front desk at <b class="text-ink">${CONFIG.NOTIFY_EMAIL}</b> was notified.</div>
+    <div class="mt-4 rounded-xl p-4 text-sm text-stone" style="background:#EFEADC">📧 Your request has been sent to <b class="text-ink">${esc(c.email)}</b>. The front desk will confirm your booking shortly by text or email. No payment is taken now — you pay at check-in.</div>
     <button data-reset="1" class="w-full mt-6 py-3 rounded-xl text-sm font-medium bg-green text-ivory">Make another booking</button>`;
 }
 
